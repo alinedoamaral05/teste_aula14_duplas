@@ -1,3 +1,4 @@
+//: [Previous](@previous)
 enum UFData {
     case RO
     case AC
@@ -34,81 +35,80 @@ class Address {
     var addressComplement: String?
     var district: String
     var city: String
+    var cep: String
     var uf: UFData
     var description: String {
         return String("\(street), \(number), \(addressComplement) - \(district) - \(city) - \(uf)")
     }
     
-    init(street: String, number: Int, addressComplement: String?, district: String, city: String, uf: UFData, description: String) {
+    init(street: String, number: Int, addressComplement: String?, district: String, city: String, cep: String, uf: UFData) {
         self.street = street
         self.number = number
         self.addressComplement = addressComplement
         self.district = district
         self.city = city
+        self.cep = cep
         self.uf = uf
-    }
-    
-}
 
-enum EmailType{
-    case professional
+    }
+}
+enum EmailType {
     case personal
+    case professional
 }
 
 class Email {
-    var emailAddress: String
+    var address: String
     var type: EmailType
     
-    init(emailAddress: String, type: EmailType) {
-        self.emailAddress = emailAddress
+    init(address: String, type: EmailType) {
+        self.address = address
         self.type = type
     }
+    
 }
 
-class Collaborator {
-    var fullName: String
-    var birthdate: String
-    var email: String
-    var fullAddress: Address
-    var cep: String
+class Employee {
+    var name: String
+    var birthDate: String
+    var emails: [Email]
+    var address: Address
     
-    init(fullName: String, birthdate: String, email: String, fullAddress: Address, cep: String) {
-        self.fullName = fullName
-        self.birthdate = birthdate
-        self.email = email
-        self.fullAddress = fullAddress
-        self.cep = cep
+    init(name: String, birthDate: String, emails: [Email], address: Address) {
+        self.name = name
+        self.birthDate = birthDate
+        self.emails = emails
+        self.address = address
         
     }
+    
 }
 
-
-class Intern: Collaborator {
+class Intern: Employee {
     var hireDate: String
     var contractFinalDate: String
     var valueOfBenefit: Float
     var pixKey: String
-
-    init(fullName: String, birthdate: String, email: String, fullAddress: Address, cep: String, hireDate: String, contractFinalDate: String, valueOfBenefit: Float, pixKey: String) {
+    
+    init(name: String, birthDate: String, emails: [Email], address: Address, hireDate: String, contractFinalDate: String, valueOfBenefit: Float, pixKey: String) {
         
         self.hireDate = hireDate
         self.contractFinalDate = contractFinalDate
         self.valueOfBenefit = valueOfBenefit
         self.pixKey = pixKey
         
-        super.init(fullName: fullName, birthdate: birthdate, email: email, fullAddress: fullAddress, cep: cep)
-        
-        
+        super.init(name: name, birthDate: birthDate, emails: emails, address: address)
     }
 }
-class CLT: Collaborator {
+
+class CLT: Employee {
     var hireDate: String
     var jobRole: String
     var salary: Double
     var agency: String
     var accountNumber: String
     
-    init(fullName: String, birthdate: String, email: String, fullAddress: Address, cep: String, hireDate: String, jobRole: String, salary: Double, agency: String, accountNumber: String) {
+    init(name: String, birthDate: String, emails: [Email], address: Address, hireDate: String, jobRole: String, salary: Double, agency: String, accountNumber: String) {
         
         self.hireDate = hireDate
         self.jobRole = jobRole
@@ -116,115 +116,105 @@ class CLT: Collaborator {
         self.agency = agency
         self.accountNumber = accountNumber
         
-        super.init(fullName: fullName, birthdate: birthdate, email: email, fullAddress: fullAddress, cep: cep)
-        
-       
+        super.init(name: name, birthDate: birthDate, emails: emails, address: address)
     }
 }
 
-class PJ: Collaborator {
+class PJ: Employee {
     var hireDate: String
     var contractFinalDate: String
     var hourValue: Double
     var agreedMonthlyMinHours: Float
     var pixKey: String
     
-    init(fullName: String, birthdate: String, email: String, fullAddress: Address, cep: String, hireDate: String, contractFinalDate: String, hourValue: Double, agreedMonthlyMinHours: Float, pixKey: String) {
+    init(name: String, birthDate: String, emails: [Email], address: Address, hireDate: String, contractFinalDate: String, hourValue: Double, agreedMonthlyMinHours: Float, pixKey: String) {
+        
         self.hireDate = hireDate
         self.contractFinalDate = contractFinalDate
         self.hourValue = hourValue
         self.agreedMonthlyMinHours = agreedMonthlyMinHours
         self.pixKey = pixKey
         
-        super.init(fullName: fullName, birthdate: birthdate, email: email, fullAddress: fullAddress, cep: cep)
+        super.init(name: name, birthDate: birthDate, emails: emails, address: address)
     }
 }
 
-class ProjectData {
-    var projectName: String
-    var numberOfCLT: [String]
-    var numberOfPJ: [String]
-    var numberOfInterns: [String]
-    var grossValue: Float
-
-        
-    init(projectName: String, numberOfCLT: [String], numberOfPJ: [String], numberOfInterns: [String], grossValue: Float) {
-        self.projectName = projectName
-        self.numberOfCLT = numberOfCLT
-        self.numberOfPJ = numberOfPJ
-        self.numberOfInterns = numberOfInterns
-        self.grossValue = grossValue
-        
-        
-        func calcLiquidValue() -> Float {
-                for wage in self.numberOfCLT {
-                    wage.valueOfBenefit
-                    salariesAmount += wage.valueOfBenefit
-                    
-                }
-                for wage in self.clt {
-                    wage.salary
-                    salariesAmount += Float(wage.salary)
-                    
-                }
-                for wage in self.pj {
-                    let total = Float(wage.agreedMonthlyMinHours) * Float(wage.hourValue)
-                    salariesAmount += total
-                    
-                }
-                
-                return salariesAmount
-            
-        }
+class Company {
+    var interns: [Intern]
+    var clts: [CLT]
+    var pjs: [PJ]
+    
+    init(interns: [Intern], clts: [CLT], pjs: [PJ]) {
+        self.interns = interns
+        self.clts = clts
+        self.pjs = pjs
     }
-}
-
-class Empresa {
-    var intern: [Intern]
-    var clt: [CLT]
-    var pj: [PJ]
+    
     var salariesAmount: Float = 0
-    var ProjectsData: [ProjectData] = []
-    
-    init(intern: [Intern], clt: [CLT], pj: [PJ]) {
-        self.intern = intern
-        self.clt = clt
-        self.pj = pj
-    }
-    
-    func addProjectToCompany(name : String, clt : [CLT], intern : [Intern], pj : [PJ], value : Float) {
-        ProjectsData.append(ProjectData(projectName: name, numberOfCLT: clt, numberOfPJ: pj, numberOfInterns: intern, grossValue: value))
-        
-    }
     
     func calcuteWholeCompanySalaries() -> Float {
-        for wage in self.intern {
-            wage.valueOfBenefit
-            salariesAmount += wage.valueOfBenefit
-            
-        }
-        for wage in self.clt {
-            wage.salary
-            salariesAmount += Float(wage.salary)
-            
-        }
-        for wage in self.pj {
-            let total = Float(wage.agreedMonthlyMinHours) * Float(wage.hourValue)
-            salariesAmount += total
-            
+        for intern in self.interns {
+            salariesAmount += intern.valueOfBenefit
+          }
+        
+        for clt in self.clts {
+            salariesAmount += Float(clt.salary)
+              
+          }
+        
+          for pj in self.pjs {
+              let total = Float(pj.agreedMonthlyMinHours) * Float(pj.hourValue)
+              salariesAmount += total
+              
+          }
+          
+          return salariesAmount
+      }
+    
+    
+    func calcProfit(projects: [ProjectData]) -> Float {
+        var profit: Float = 0
+        for project in projects {
+            profit += project.calcLiquidPrice()
         }
         
-        return salariesAmount
+        return profit
     }
 }
-    var person = Intern(fullName: "Pedro Grando", birthdate: "03/11/2003", email: "exemplpo", fullAddress: Address(street: "abc", number: 123, addressComplement: "ap 203", district: "bairro", city: "gylef", uf: UFData.BA, description: ""), cep: "0000", hireDate: "25/11/1998", contractFinalDate: "25/11/2010", valueOfBenefit: 600.10, pixKey: "0538462436564")
 
-    var person2 = PJ(fullName: "Pedro Grando", birthdate: "Pedro Grando", email: "Pedro Grando", fullAddress: Address(street: "Pedro Grando", number: 21, addressComplement: "Pedro Grando", district: "Pedro Grando", city: "Pedro Grando", uf: UFData.BA, description: ""), cep: "Pedro Grando", hireDate: "Pedro Grando", contractFinalDate: "Pedro Grando", hourValue: 30, agreedMonthlyMinHours: 40, pixKey: "Pedro Grando")
+class ProjectData: Company {
+    var projectName: String
+    var grossValue: Float
     
-    var person3 = CLT(fullName: "Pedro Grando", birthdate: "Pedro Grando", email: "Pedro Grando", fullAddress: Address(street: "Pedro Grando", number: 32, addressComplement: "Pedro Grando", district: "Pedro Grando", city: "Pedro Grando", uf: UFData.BA, description: ""), cep: "Pedro Grando", hireDate: "Pedro Grando", jobRole: "Pedro Grando", salary: 1200, agency: "Pedro Grando", accountNumber: "Pedro Grando")
+    init(interns: [Intern], clts: [CLT], pjs: [PJ], projectName: String, grossValue: Float) {
+        self.projectName = projectName
+        self.grossValue = grossValue
+        
+        super.init(interns: interns, clts: clts, pjs: pjs)
+    }
+    
+    
+    func calcLiquidPrice() -> Float {
+         self.grossValue - calcuteWholeCompanySalaries()
+    }
+}
 
-var Ogitrov = Empresa(intern: [person], clt: [person3], pj:[person2])
-    Ogitrov.calcuteWholeCompanySalaries()
 
-Ogitrov.addProjectToCompany(name: "ALINE", clt: [Ogitrov.clt[0]], intern: [Ogitrov.intern[0]], pj: [Ogitrov.pj[0]], value: 10000.0)
-Ogitrov.ProjectsData[0]
+var emailList = [Email(address: "PEDRO@GMAI", type: EmailType.personal)]
+
+var address = Address(street: "", number: 23, addressComplement: "apr", district: "occo", city: "fds", cep: "673249324", uf: UFData.RS)
+
+var intern1 = Intern(name: "", birthDate: "", emails: emailList, address: address, hireDate: "00/00/00", contractFinalDate: "00/00/00", valueOfBenefit: 100.0, pixKey: "32478")
+
+var clt1 = CLT(name: "", birthDate: "", emails: emailList, address: address, hireDate: "00/000//00", jobRole: "", salary: 100.0, agency: "", accountNumber: "")
+
+var pj1 = PJ(name: "", birthDate: "", emails: emailList, address: address, hireDate: "", contractFinalDate: "", hourValue: 20, agreedMonthlyMinHours: 10, pixKey: "")
+
+var project1 = ProjectData(interns: [intern1], clts: [clt1], pjs: [pj1], projectName: "projeto1", grossValue: 500.0)
+
+var empresa1 = Company(interns: [intern1], clts: [clt1], pjs: [pj1])
+
+//print(empresa1.calcuteWholeCompanySalaries())
+//print(project1.calcLiquidPrice())
+//print(empresa1.calcProfit(projects: [project1]))
+//: [Next](@next)
